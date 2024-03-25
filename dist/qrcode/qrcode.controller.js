@@ -21,6 +21,7 @@ let QrcodeController = class QrcodeController {
         this.qrcodeService = qrcodeService;
     }
     async thanhToanQrCode(body) {
+        console.log(222222222);
         return this.qrcodeService.thanhToanQrCode(body);
     }
 };

@@ -8,10 +8,11 @@ export class QrcodeController {
 
   @Post('/BVGD/api/thanhtoanqrcode')
   async thanhToanQrCode(@Body() body: PayloadDto): Promise<{
-    code: string,
-    message: string,
-    checksum: string
+    code: string;
+    message: string;
+    checksum: string;
   }> {
-    return this.qrcodeService.thanhToanQrCode(body)
+    console.log(222222222)
+    return this.qrcodeService.thanhToanQrCode(body);
   }
 }

@@ -89,6 +89,4 @@ __decorate([
     (0, class_validator_1.MaxLength)(30),
     __metadata("design:type", String)
 ], PayloadDto.prototype, "accountNo", void 0);
-class AddData {
-}
 //# sourceMappingURL=thanhToanQrCode.dto.js.map
