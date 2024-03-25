@@ -12,7 +12,6 @@ export class QrcodeController {
     message: string;
     checksum: string;
   }> {
-    console.log(222222222)
     return this.qrcodeService.thanhToanQrCode(body);
   }
 }
