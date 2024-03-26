@@ -18,7 +18,9 @@ export class QrcodeService {
   }
 
   getResponseThanhToan({ code, message }: { code: string; message: string }) {
-    const secretKey = this.configService.get<string>('SETCRET_KEY');
+    const secretKey =
+      this.configService.get<string>('SETCRET_KEY') ||
+      '7XGBUIwLmCp7kuF3v3hqweuhZVBDU4HC';
 
     return {
       code,
