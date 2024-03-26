@@ -19,7 +19,7 @@ let QrcodeService = class QrcodeService {
         this.configService = configService;
     }
     thanhToanQrCode(dto) {
-        return this.getResponseThanhToan(code_status_1.CODE_STATUS.CODE_07);
+        return this.getResponseThanhToan(code_status_1.CODE_STATUS.CODE_04);
     }
     getResponseThanhToan(code) {
         return {
