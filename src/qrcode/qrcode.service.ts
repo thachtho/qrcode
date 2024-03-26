@@ -12,7 +12,7 @@ export class QrcodeService {
   thanhToanQrCode(dto: PayloadDto) {
     //check thanh toan(microsercice qua eahealth)
     // return this.getResponseThanhToan(CODE_STATUS.CODE_00);
-    return this.getResponseThanhToan(CODE_STATUS.CODE_03);
+    return this.getResponseThanhToan(CODE_STATUS.CODE_07);
   }
 
   getResponseThanhToan(code: string) {
