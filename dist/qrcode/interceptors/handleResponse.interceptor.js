@@ -9,33 +9,29 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.QrcodeService = void 0;
+exports.HandleResponse = void 0;
 const common_1 = require("@nestjs/common");
-const config_1 = require("@nestjs/config");
-const md5 = require('md5');
-let QrcodeService = class QrcodeService {
-    constructor(configService) {
-        this.configService = configService;
+const operators_1 = require("rxjs/operators");
+const qrcode_service_1 = require("../qrcode.service");
+let HandleResponse = class HandleResponse {
+    constructor(service) {
+        this.service = service;
     }
-    thanhToanQrCode(dto) {
-        const { code } = dto;
-        return this.getResponseThanhToan({
-            code: '00',
-            message: 'Đặt hàng thành công',
-        });
-    }
-    getResponseThanhToan({ code, message }) {
-        const secretKey = this.configService.get('SETCRET_KEY');
-        return {
-            code,
-            message,
-            checksum: md5(`${code}${secretKey}`),
-        };
+    intercept(context, next) {
+        return next.handle().pipe((0, operators_1.catchError)(() => {
+            const responseError = this.service.getResponseThanhToan({
+                code: '04',
+                message: 'Lỗi tạo đơn hàng',
+            });
+            throw new common_1.BadRequestException(responseError);
+        }), (0, operators_1.map)(async (response) => {
+            return response;
+        }));
     }
 };
-exports.QrcodeService = QrcodeService;
-exports.QrcodeService = QrcodeService = __decorate([
+exports.HandleResponse = HandleResponse;
+exports.HandleResponse = HandleResponse = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [config_1.ConfigService])
-], QrcodeService);
-//# sourceMappingURL=qrcode.service.js.map
+    __metadata("design:paramtypes", [qrcode_service_1.QrcodeService])
+], HandleResponse);
+//# sourceMappingURL=handleResponse.interceptor.js.map

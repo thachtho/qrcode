@@ -16,6 +16,7 @@ exports.QrcodeController = void 0;
 const common_1 = require("@nestjs/common");
 const thanhToanQrCode_dto_1 = require("./dto/thanhToanQrCode.dto");
 const qrcode_service_1 = require("./qrcode.service");
+const handleResponse_interceptor_1 = require("./interceptors/handleResponse.interceptor");
 let QrcodeController = class QrcodeController {
     constructor(qrcodeService) {
         this.qrcodeService = qrcodeService;
@@ -27,6 +28,7 @@ let QrcodeController = class QrcodeController {
 exports.QrcodeController = QrcodeController;
 __decorate([
     (0, common_1.Post)('/BVGD/api/thanhtoanqrcode'),
+    (0, common_1.UseInterceptors)(handleResponse_interceptor_1.HandleResponse),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [thanhToanQrCode_dto_1.PayloadDto]),
