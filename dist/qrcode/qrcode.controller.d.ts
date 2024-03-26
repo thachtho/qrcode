@@ -1,11 +1,7 @@
 import { PayloadDto } from './dto/thanhToanQrCode.dto';
-import { QrcodeService } from './qrcode.service';
+import { IResponseQrcode, QrcodeService } from './qrcode.service';
 export declare class QrcodeController {
     private readonly qrcodeService;
     constructor(qrcodeService: QrcodeService);
-    thanhToanQrCode(body: PayloadDto): Promise<{
-        code: string;
-        message: string;
-        checksum: string;
-    }>;
+    thanhToanQrCode(body: PayloadDto): Promise<IResponseQrcode>;
 }

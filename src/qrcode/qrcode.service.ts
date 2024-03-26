@@ -1,26 +1,35 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { Injectable } from '@nestjs/common';
-import { PayloadDto } from './dto/thanhToanQrCode.dto';
+import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { CODE_MESSAGE, CODE_STATUS } from './enum/code-status';
+import { ClientProxy } from '@nestjs/microservices';
+import { lastValueFrom } from 'rxjs';
+import { PayloadDto } from './dto/thanhToanQrCode.dto';
+import { CODE_MESSAGE } from './enum/code-status';
 const md5 = require('md5');
+
+export interface IResponseQrcode {
+  code: string;
+  message: string;
+  checksum: string;
+}
 
 @Injectable()
 export class QrcodeService {
-  constructor(private configService: ConfigService) {}
+  constructor(
+    private configService: ConfigService,
+    @Inject('BIDV') private client: ClientProxy,
+  ) {}
 
-  thanhToanQrCode(dto: PayloadDto) {
-    //check thanh toan(microsercice qua eahealth)
-    // return this.getResponseThanhToan(CODE_STATUS.CODE_00);
-    return this.getResponseThanhToan(CODE_STATUS.CODE_03);
+  async thanhToanQrCode(dto: PayloadDto): Promise<IResponseQrcode> {
+    const response = await this.checkThanhToanEhealth(dto);
+
+    return response;
   }
 
-  getResponseThanhToan(code: string) {
-    return {
-      code,
-      message: CODE_MESSAGE[code],
-      checksum: md5(`${code}${this.getSecretKey()}`),
-    };
+  async checkThanhToanEhealth(dto: PayloadDto): Promise<IResponseQrcode> {
+    const result = this.client.send({ cmd: 'notifications' }, dto);
+
+    return await lastValueFrom(result);
   }
 
   getSecretKey() {
@@ -28,5 +37,13 @@ export class QrcodeService {
       this.configService.get<string>('SETCRET_KEY') ||
       '7XGBUIwLmCp7kuF3v3hqweuhZVBDU4HC'
     );
+  }
+
+  getResponseThanhToan(code: string): IResponseQrcode {
+    return {
+      code,
+      message: CODE_MESSAGE[code],
+      checksum: md5(`${code}${this.getSecretKey()}`),
+    };
   }
 }

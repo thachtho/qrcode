@@ -8,7 +8,7 @@ import {
 import { PayloadDto } from './dto/thanhToanQrCode.dto';
 import { CODE_STATUS } from './enum/code-status';
 import { HandleResponse } from './interceptors/handleResponse.interceptor';
-import { QrcodeService } from './qrcode.service';
+import { IResponseQrcode, QrcodeService } from './qrcode.service';
 
 @Controller()
 export class QrcodeController {
@@ -16,11 +16,7 @@ export class QrcodeController {
 
   @Post('/BVGD/api/thanhtoanqrcode')
   @UseInterceptors(HandleResponse)
-  async thanhToanQrCode(@Body() body: PayloadDto): Promise<{
-    code: string;
-    message: string;
-    checksum: string;
-  }> {
+  async thanhToanQrCode(@Body() body: PayloadDto): Promise<IResponseQrcode> {
     try {
       return this.qrcodeService.thanhToanQrCode(body);
     } catch (error) {

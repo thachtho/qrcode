@@ -10,11 +10,27 @@ exports.QrcodeModule = void 0;
 const common_1 = require("@nestjs/common");
 const qrcode_controller_1 = require("./qrcode.controller");
 const qrcode_service_1 = require("./qrcode.service");
+const microservices_1 = require("@nestjs/microservices");
 let QrcodeModule = class QrcodeModule {
 };
 exports.QrcodeModule = QrcodeModule;
 exports.QrcodeModule = QrcodeModule = __decorate([
     (0, common_1.Module)({
+        imports: [
+            microservices_1.ClientsModule.register([
+                {
+                    name: 'BIDV',
+                    transport: microservices_1.Transport.RMQ,
+                    options: {
+                        urls: ['amqp://localhost:5672'],
+                        queue: 'bvgd111',
+                        queueOptions: {
+                            durable: false,
+                        },
+                    },
+                },
+            ]),
+        ],
         controllers: [qrcode_controller_1.QrcodeController],
         providers: [qrcode_service_1.QrcodeService],
     })

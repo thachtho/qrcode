@@ -8,18 +8,33 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.QrcodeService = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
+const microservices_1 = require("@nestjs/microservices");
+const rxjs_1 = require("rxjs");
 const code_status_1 = require("./enum/code-status");
 const md5 = require('md5');
 let QrcodeService = class QrcodeService {
-    constructor(configService) {
+    constructor(configService, client) {
         this.configService = configService;
+        this.client = client;
     }
-    thanhToanQrCode(dto) {
-        return this.getResponseThanhToan(code_status_1.CODE_STATUS.CODE_03);
+    async thanhToanQrCode(dto) {
+        const response = await this.checkThanhToanEhealth(dto);
+        return response;
+    }
+    async checkThanhToanEhealth(dto) {
+        const result = this.client.send({ cmd: 'notifications' }, dto);
+        return await (0, rxjs_1.lastValueFrom)(result);
+    }
+    getSecretKey() {
+        return (this.configService.get('SETCRET_KEY') ||
+            '7XGBUIwLmCp7kuF3v3hqweuhZVBDU4HC');
     }
     getResponseThanhToan(code) {
         return {
@@ -28,14 +43,12 @@ let QrcodeService = class QrcodeService {
             checksum: md5(`${code}${this.getSecretKey()}`),
         };
     }
-    getSecretKey() {
-        return (this.configService.get('SETCRET_KEY') ||
-            '7XGBUIwLmCp7kuF3v3hqweuhZVBDU4HC');
-    }
 };
 exports.QrcodeService = QrcodeService;
 exports.QrcodeService = QrcodeService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [config_1.ConfigService])
+    __param(1, (0, common_1.Inject)('BIDV')),
+    __metadata("design:paramtypes", [config_1.ConfigService,
+        microservices_1.ClientProxy])
 ], QrcodeService);
 //# sourceMappingURL=qrcode.service.js.map

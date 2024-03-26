@@ -1,17 +1,17 @@
-import { PayloadDto } from './dto/thanhToanQrCode.dto';
 import { ConfigService } from '@nestjs/config';
+import { ClientProxy } from '@nestjs/microservices';
+import { PayloadDto } from './dto/thanhToanQrCode.dto';
+export interface IResponseQrcode {
+    code: string;
+    message: string;
+    checksum: string;
+}
 export declare class QrcodeService {
     private configService;
-    constructor(configService: ConfigService);
-    thanhToanQrCode(dto: PayloadDto): {
-        code: string;
-        message: any;
-        checksum: any;
-    };
-    getResponseThanhToan(code: string): {
-        code: string;
-        message: any;
-        checksum: any;
-    };
+    private client;
+    constructor(configService: ConfigService, client: ClientProxy);
+    thanhToanQrCode(dto: PayloadDto): Promise<IResponseQrcode>;
+    checkThanhToanEhealth(dto: PayloadDto): Promise<IResponseQrcode>;
     getSecretKey(): string;
+    getResponseThanhToan(code: string): IResponseQrcode;
 }

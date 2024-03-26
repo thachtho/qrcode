@@ -9,13 +9,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppService = void 0;
 const common_1 = require("@nestjs/common");
 let AppService = class AppService {
-    async getHello() {
-        return 'Hello';
-    }
-    getNotifications(data) {
-        console.log(`[${new Date().getTime()}]-sv___1:`, data);
-        return { ...data, status: 'SV_1' };
-    }
 };
 exports.AppService = AppService;
 exports.AppService = AppService = __decorate([
