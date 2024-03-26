@@ -2,6 +2,7 @@
 import { Injectable } from '@nestjs/common';
 import { PayloadDto } from './dto/thanhToanQrCode.dto';
 import { ConfigService } from '@nestjs/config';
+import { CODE_MESSAGE, CODE_STATUS } from './enum/code-status';
 const md5 = require('md5');
 
 @Injectable()
@@ -9,23 +10,23 @@ export class QrcodeService {
   constructor(private configService: ConfigService) {}
 
   thanhToanQrCode(dto: PayloadDto) {
-    const { code } = dto;
-
-    return this.getResponseThanhToan({
-      code: '00',
-      message: 'Đặt hàng thành công',
-    });
+    //check thanh toan(microsercice qua eahealth)
+    // return this.getResponseThanhToan(CODE_STATUS.CODE_00);
+    return this.getResponseThanhToan(CODE_STATUS.CODE_03);
   }
 
-  getResponseThanhToan({ code, message }: { code: string; message: string }) {
-    const secretKey =
-      this.configService.get<string>('SETCRET_KEY') ||
-      '7XGBUIwLmCp7kuF3v3hqweuhZVBDU4HC';
-
+  getResponseThanhToan(code: string) {
     return {
       code,
-      message,
-      checksum: md5(`${code}${secretKey}`),
+      message: CODE_MESSAGE[code],
+      checksum: md5(`${code}${this.getSecretKey()}`),
     };
+  }
+
+  getSecretKey() {
+    return (
+      this.configService.get<string>('SETCRET_KEY') ||
+      '7XGBUIwLmCp7kuF3v3hqweuhZVBDU4HC'
+    );
   }
 }

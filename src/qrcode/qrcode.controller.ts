@@ -1,7 +1,14 @@
-import { Body, Controller, Post, UseInterceptors } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Post,
+  UseInterceptors,
+} from '@nestjs/common';
 import { PayloadDto } from './dto/thanhToanQrCode.dto';
-import { QrcodeService } from './qrcode.service';
+import { CODE_STATUS } from './enum/code-status';
 import { HandleResponse } from './interceptors/handleResponse.interceptor';
+import { QrcodeService } from './qrcode.service';
 
 @Controller()
 export class QrcodeController {
@@ -14,6 +21,13 @@ export class QrcodeController {
     message: string;
     checksum: string;
   }> {
-    return this.qrcodeService.thanhToanQrCode(body);
+    try {
+      return this.qrcodeService.thanhToanQrCode(body);
+    } catch (error) {
+      const code = CODE_STATUS.CODE_04;
+      const responseError = this.qrcodeService.getResponseThanhToan(code);
+
+      throw new BadRequestException(responseError);
+    }
   }
 }

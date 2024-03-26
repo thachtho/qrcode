@@ -5,15 +5,13 @@ export declare class QrcodeService {
     constructor(configService: ConfigService);
     thanhToanQrCode(dto: PayloadDto): {
         code: string;
-        message: string;
+        message: any;
         checksum: any;
     };
-    getResponseThanhToan({ code, message }: {
+    getResponseThanhToan(code: string): {
         code: string;
-        message: string;
-    }): {
-        code: string;
-        message: string;
+        message: any;
         checksum: any;
     };
+    getSecretKey(): string;
 }

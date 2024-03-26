@@ -15,14 +15,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.QrcodeController = void 0;
 const common_1 = require("@nestjs/common");
 const thanhToanQrCode_dto_1 = require("./dto/thanhToanQrCode.dto");
-const qrcode_service_1 = require("./qrcode.service");
+const code_status_1 = require("./enum/code-status");
 const handleResponse_interceptor_1 = require("./interceptors/handleResponse.interceptor");
+const qrcode_service_1 = require("./qrcode.service");
 let QrcodeController = class QrcodeController {
     constructor(qrcodeService) {
         this.qrcodeService = qrcodeService;
     }
     async thanhToanQrCode(body) {
-        return this.qrcodeService.thanhToanQrCode(body);
+        try {
+            return this.qrcodeService.thanhToanQrCode(body);
+        }
+        catch (error) {
+            const code = code_status_1.CODE_STATUS.CODE_04;
+            const responseError = this.qrcodeService.getResponseThanhToan(code);
+            throw new common_1.BadRequestException(responseError);
+        }
     }
 };
 exports.QrcodeController = QrcodeController;

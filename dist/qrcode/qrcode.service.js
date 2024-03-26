@@ -12,26 +12,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.QrcodeService = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
+const code_status_1 = require("./enum/code-status");
 const md5 = require('md5');
 let QrcodeService = class QrcodeService {
     constructor(configService) {
         this.configService = configService;
     }
     thanhToanQrCode(dto) {
-        const { code } = dto;
-        return this.getResponseThanhToan({
-            code: '00',
-            message: 'Đặt hàng thành công',
-        });
+        return this.getResponseThanhToan(code_status_1.CODE_STATUS.CODE_03);
     }
-    getResponseThanhToan({ code, message }) {
-        const secretKey = this.configService.get('SETCRET_KEY') ||
-            '7XGBUIwLmCp7kuF3v3hqweuhZVBDU4HC';
+    getResponseThanhToan(code) {
         return {
             code,
-            message,
-            checksum: md5(`${code}${secretKey}`),
+            message: code_status_1.CODE_MESSAGE[code],
+            checksum: md5(`${code}${this.getSecretKey()}`),
         };
+    }
+    getSecretKey() {
+        return (this.configService.get('SETCRET_KEY') ||
+            '7XGBUIwLmCp7kuF3v3hqweuhZVBDU4HC');
     }
 };
 exports.QrcodeService = QrcodeService;
