@@ -11,6 +11,7 @@ const common_1 = require("@nestjs/common");
 const qrcode_controller_1 = require("./qrcode.controller");
 const qrcode_service_1 = require("./qrcode.service");
 const microservices_1 = require("@nestjs/microservices");
+const constant_1 = require("./constant");
 let QrcodeModule = class QrcodeModule {
 };
 exports.QrcodeModule = QrcodeModule;
@@ -23,10 +24,15 @@ exports.QrcodeModule = QrcodeModule = __decorate([
                     transport: microservices_1.Transport.RMQ,
                     options: {
                         urls: ['amqp://localhost:5672'],
-                        queue: 'bvgd111',
+                        queue: 'bbbb',
+                        noAck: true,
                         queueOptions: {
-                            durable: false,
+                            durable: true,
+                            arguments: {
+                                'x-message-ttl': constant_1.TIMEOUT_SEND_REQUEST,
+                            },
                         },
+                        persistent: true,
                     },
                 },
             ]),

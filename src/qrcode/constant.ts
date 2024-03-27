@@ -1,0 +1,3 @@
+const TIMEOUT_SEND_REQUEST = 5000;
+
+export { TIMEOUT_SEND_REQUEST };

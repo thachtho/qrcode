@@ -11,7 +11,7 @@ export declare class QrcodeService {
     private client;
     constructor(configService: ConfigService, client: ClientProxy);
     thanhToanQrCode(dto: PayloadDto): Promise<IResponseQrcode>;
-    checkThanhToanEhealth(dto: PayloadDto): Promise<IResponseQrcode>;
+    checkThanhToanEhealth(dto: PayloadDto): Promise<any>;
     getSecretKey(): string;
     getResponseThanhToan(code: string): IResponseQrcode;
 }

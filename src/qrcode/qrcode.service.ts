@@ -2,9 +2,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ClientProxy } from '@nestjs/microservices';
-import { lastValueFrom } from 'rxjs';
+import { lastValueFrom, timeout } from 'rxjs';
 import { PayloadDto } from './dto/thanhToanQrCode.dto';
 import { CODE_MESSAGE } from './enum/code-status';
+import { TIMEOUT_SEND_REQUEST } from './constant';
 const md5 = require('md5');
 
 export interface IResponseQrcode {
@@ -21,13 +22,16 @@ export class QrcodeService {
   ) {}
 
   async thanhToanQrCode(dto: PayloadDto): Promise<IResponseQrcode> {
+    //gửi qua ehealth xử lý
     const response = await this.checkThanhToanEhealth(dto);
 
     return response;
   }
 
-  async checkThanhToanEhealth(dto: PayloadDto): Promise<IResponseQrcode> {
-    const result = this.client.send({ cmd: 'notifications' }, dto);
+  async checkThanhToanEhealth(dto: PayloadDto): Promise<any> {
+    const result = this.client
+      .send({ cmd: 'notifications' }, dto)
+      .pipe(timeout(TIMEOUT_SEND_REQUEST));
 
     return await lastValueFrom(result);
   }

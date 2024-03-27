@@ -18,6 +18,7 @@ const config_1 = require("@nestjs/config");
 const microservices_1 = require("@nestjs/microservices");
 const rxjs_1 = require("rxjs");
 const code_status_1 = require("./enum/code-status");
+const constant_1 = require("./constant");
 const md5 = require('md5');
 let QrcodeService = class QrcodeService {
     constructor(configService, client) {
@@ -29,7 +30,9 @@ let QrcodeService = class QrcodeService {
         return response;
     }
     async checkThanhToanEhealth(dto) {
-        const result = this.client.send({ cmd: 'notifications' }, dto);
+        const result = this.client
+            .send({ cmd: 'notifications' }, dto)
+            .pipe((0, rxjs_1.timeout)(constant_1.TIMEOUT_SEND_REQUEST));
         return await (0, rxjs_1.lastValueFrom)(result);
     }
     getSecretKey() {
